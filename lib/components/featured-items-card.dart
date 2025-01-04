@@ -8,7 +8,7 @@ class FeaturedItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(20),
+      margin: EdgeInsets.all(15),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(25),
         color: Colors.white,
@@ -69,13 +69,16 @@ class FeaturedItemCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       MaterialButton(
+                          color: Colors.grey,
                           onPressed: () {
                             print('Ver detalles');
                           },
                           child: Text('Ver Detalles')),
                       MaterialButton(
+                          color: Colors.yellow,
                           onPressed: () {
                             print('Carrito');
                           },
