@@ -19,6 +19,7 @@ class PaymentComplete extends StatelessWidget {
                 MaterialButton(
                     child: const Text('Ver Voucher'),
                     onPressed: () {
+                      Navigator.of(context).pop();
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => const ViewVoucher(voucherID: '14')));
                     }),
