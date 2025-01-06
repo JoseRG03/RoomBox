@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:room_box_app/pages/app/user/user-payment.dart';
-import 'package:room_box_app/pages/app/user/user-vouchers.dart';
+import 'package:room_box_app/pages/app/user/payments/user-payment.dart';
+import 'package:room_box_app/pages/app/user/vouchers/user-vouchers.dart';
 
 import 'app-wrapper.dart';
 

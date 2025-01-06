@@ -64,8 +64,8 @@ class TopItemsCarousel extends StatelessWidget {
       options: CarouselOptions(
         height: 400,
       ),
-      items: List<Widget>.generate(10, (int index) {
-        return FeaturedItemCard();
+      items: List<Widget>.generate(5, (int index) {
+        return FeaturedItemCard(itemID: 'D${(index + 1).toString()}',);
       }),
     );
   }
@@ -87,7 +87,7 @@ class ProductList extends StatelessWidget {
               crossAxisCount: 2),
           itemCount: 20,
           itemBuilder: (context, index) {
-            return ItemCard();
+            return ItemCard(itemID: (index + 1).toString(),);
           }),
     );
   }

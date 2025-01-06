@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:room_box_app/pages/app/cart/payment-complete.dart';
 
 class CartPage extends StatelessWidget {
   const CartPage({super.key});
@@ -67,7 +68,10 @@ class CartPage extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerRight,
                   child: MaterialButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const PaymentComplete()));
+                    },
                     color: Colors.yellow,
                     child: Text('Realizar Pago'),
                   ),

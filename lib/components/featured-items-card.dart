@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../pages/app/store/item-description.dart';
+
 class FeaturedItemCard extends StatelessWidget {
   const FeaturedItemCard({
-    super.key,
+    super.key, required this.itemID,
   });
+  final String itemID;
+
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +62,7 @@ class FeaturedItemCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Card Title",
+                    "Card Title ${itemID}",
                     style: TextStyle(
                         fontSize: 18, fontWeight: FontWeight.bold),
                   ),
@@ -74,7 +78,8 @@ class FeaturedItemCard extends StatelessWidget {
                       MaterialButton(
                           color: Colors.grey,
                           onPressed: () {
-                            print('Ver detalles');
+                            Navigator.of(context).push(
+                                MaterialPageRoute(builder: (context) => ItemDescription(itemID: itemID)));
                           },
                           child: Text('Ver Detalles')),
                       MaterialButton(
