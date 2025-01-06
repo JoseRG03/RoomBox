@@ -26,6 +26,6 @@ class _RoomBoxState extends State<RoomBox> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: appTitle,
-      home:  loggedIn ? Home() : Login(onPressed: handleLogin));
+      home:  loggedIn ? Home(onLogOut: handleLogin) : Login(onPressed: handleLogin));
   }
 }

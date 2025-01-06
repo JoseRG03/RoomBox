@@ -29,7 +29,9 @@ class HomePage extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Text('Destacados:', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                child: Text('Destacados:',
+                    style:
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               ),
               SizedBox(
                 height: 400,
@@ -38,7 +40,9 @@ class HomePage extends StatelessWidget {
               const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Text('Todos los Productos:', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                child: Text('Todos los Productos:',
+                    style:
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               ),
               ProductList(),
             ],
@@ -79,8 +83,8 @@ class ProductList extends StatelessWidget {
       child: GridView.builder(
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
-          gridDelegate:
-              const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2),
           itemCount: 20,
           itemBuilder: (context, index) {
             return ItemCard();

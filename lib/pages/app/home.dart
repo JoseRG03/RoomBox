@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:room_box_app/pages/app/user/user-payment.dart';
+import 'package:room_box_app/pages/app/user/user-vouchers.dart';
 
-import 'app-router.dart';
+import 'app-wrapper.dart';
 
 class Home extends StatefulWidget {
-  Home({super.key});
-  // final handleLogOut;
+  Home({super.key, required this.onLogOut});
+  final VoidCallback onLogOut;
 
   @override
   State<Home> createState() => _HomeState();
@@ -18,10 +20,29 @@ class _HomeState extends State<Home> {
         title: Text("RoomBox"),
         centerTitle: true,
         actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.account_circle_rounded))
+          PopupMenuButton(
+              icon: Icon(Icons.account_circle_rounded),
+              itemBuilder: (context) => [
+                    PopupMenuItem(
+                      child: Text('Vouchers'),
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const UserVouchers()));
+                      },
+                    ),
+                    PopupMenuItem(child: Text('Métodos de Pago'),
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const UserPayment()));
+                      },),
+                    PopupMenuItem(
+                      child: Text('Cerrar Sesión'),
+                      onTap: widget.onLogOut,
+                    ),
+                  ]),
         ],
       ),
-      body: AppRouter(),
+      body: AppRouter.AppWrapper(),
     );
   }
 }

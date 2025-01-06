@@ -6,6 +6,9 @@ class Login extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Center(child: InkWell(onTap: onPressed, child: const Text('Iniciar Sesión'))));
+    return Scaffold(
+        body: Center(
+            child: InkWell(
+                onTap: onPressed, child: const Text('Iniciar Sesión'))));
   }
 }

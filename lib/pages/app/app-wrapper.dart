@@ -4,13 +4,13 @@ import 'store/home-page.dart';
 import 'cart/cart-page.dart';
 
 class AppRouter extends StatefulWidget {
-  const AppRouter({super.key});
+  const AppRouter.AppWrapper({super.key});
 
   @override
-  State<AppRouter> createState() => _AppRouterState();
+  State<AppRouter> createState() => AppWrapper();
 }
 
-class _AppRouterState extends State<AppRouter> {
+class AppWrapper extends State<AppRouter> {
   int currentScreen = 0;
   List<Widget> screens = [
     HomePage(),
