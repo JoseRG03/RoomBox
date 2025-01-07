@@ -75,7 +75,7 @@ class CartPage extends StatelessWidget {
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                     )),
-                SelectedPaymentMethodCard(),
+                SelectedPaymentMethodCard(isEditable: true,),
                 Align(
                   alignment: Alignment.centerRight,
                   child: MaterialButton(

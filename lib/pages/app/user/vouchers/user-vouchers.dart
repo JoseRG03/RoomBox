@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:room_box_app/pages/app/user/vouchers/voucher-details.dart';
 
+import '../../../../components/cards/voucher-card.dart';
+
 class UserVouchers extends StatelessWidget {
   const UserVouchers({super.key});
 
@@ -11,13 +13,13 @@ class UserVouchers extends StatelessWidget {
           title: Text("Historial de Vouchers"),
         ),
         body: Center(
-          child: TextButton(
-            child: const Text('Ver Voucher'),
-            onPressed: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const ViewVoucher(voucherID: '14')));
-            },
-          ),
+          child: Expanded(
+                child: ListView.builder(
+                    itemCount: 1,
+                    itemBuilder: (context, index) {
+                      return VoucherCard();
+                    }),
+              ),
         ));
   }
 }

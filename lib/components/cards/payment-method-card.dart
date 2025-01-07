@@ -4,8 +4,10 @@ import '../../pages/app/user/payments/user-payment.dart';
 
 class SelectedPaymentMethodCard extends StatelessWidget {
   const SelectedPaymentMethodCard({
-    super.key,
+    super.key, required this.isEditable,
   });
+
+  final bool isEditable;
 
   @override
   Widget build(BuildContext context) {
@@ -56,12 +58,12 @@ class SelectedPaymentMethodCard extends StatelessWidget {
               ),
             ),
           ),
-          IconButton(
+          isEditable ? IconButton(
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => const UserPayment()));
               },
-              icon: Icon(Icons.edit))
+              icon: Icon(Icons.edit)) : SizedBox()
         ],
       ),
     );

@@ -14,8 +14,10 @@ class PaymentComplete extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Text('¡Éxito!'),
-                const Text('Tu compra se ha realizado con éxito.'),
+                const Icon(Icons.check, size: 100, color: Colors.green),
+                const Text('¡Éxito!', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
+                const Text('Tu compra se ha realizado exitosamente.'),
+                const SizedBox(height: 30),
                 MaterialButton(
                     child: const Text('Ver Voucher'),
                     onPressed: () {
