@@ -1,8 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
-import '../../../components/featured-items-card.dart';
-import '../../../components/item-card.dart';
+import '../../../components/cards/featured-items-card.dart';
+import '../../../components/cards/item-card.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});

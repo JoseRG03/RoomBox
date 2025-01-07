@@ -30,11 +30,13 @@ class _HomeState extends State<Home> {
                             builder: (context) => const UserVouchers()));
                       },
                     ),
-                    PopupMenuItem(child: Text('Métodos de Pago'),
+                    PopupMenuItem(
+                      child: Text('Métodos de Pago'),
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => const UserPayment()));
-                      },),
+                      },
+                    ),
                     PopupMenuItem(
                       child: Text('Cerrar Sesión'),
                       onTap: widget.onLogOut,
