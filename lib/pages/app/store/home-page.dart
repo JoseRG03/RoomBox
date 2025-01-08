@@ -18,7 +18,7 @@ class HomePage extends StatelessWidget {
               Expanded(
                   child: TextField(
                 decoration: InputDecoration(hintText: "Buscar..."),
-              )),
+              ),),
               IconButton(onPressed: () {}, icon: Icon(Icons.filter_alt))
             ],
           ),

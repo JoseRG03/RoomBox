@@ -5,8 +5,10 @@ import '../../pages/app/user/vouchers/voucher-details.dart';
 
 class VoucherCard extends StatelessWidget {
   const VoucherCard({
-    super.key,
+    super.key, required this.voucherID,
   });
+
+  final String voucherID;
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +67,7 @@ class VoucherCard extends StatelessWidget {
           IconButton(
               onPressed: () {
                 Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => const ViewVoucher(voucherID: '14')));
+                    MaterialPageRoute(builder: (context) => ViewVoucher(voucherID: voucherID)));
               },
               icon: Icon(Icons.remove_red_eye_outlined, size: 50,)),
           SizedBox(width: 15),
