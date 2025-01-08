@@ -3,17 +3,17 @@ import 'package:room_box_app/pages/app/store/item-description.dart';
 
 class ItemCard extends StatelessWidget {
   const ItemCard({
-    super.key, required this.itemID,
+    super.key,
+    required this.itemID,
   });
   final String itemID;
-
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => ItemDescription(itemID: itemID)));
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => ItemDescription(itemID: itemID)));
       },
       child: Container(
         margin: EdgeInsets.all(10),
@@ -69,19 +69,20 @@ class ItemCard extends StatelessWidget {
                     Expanded(
                       child: Text(
                         "Card Title",
-                        style:
-                            TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                     ),
                     Center(
                       child: Expanded(
                         flex: 1,
                         child: MaterialButton(
-                            color: Colors.yellow,
-                            onPressed: () {
-                              print('Carrito');
-                            },
-                            child: Text('Agregar al Carrito')),
+                          color: Colors.yellow,
+                          onPressed: () {
+                            print('Carrito');
+                          },
+                          child: Text('Agregar al Carrito'),
+                        ),
                       ),
                     ),
                   ],
