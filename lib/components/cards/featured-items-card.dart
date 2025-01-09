@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../pages/app/store/item-description.dart';
+import '../snack-bar.dart';
 
 class FeaturedItemCard extends StatelessWidget {
   const FeaturedItemCard({
@@ -85,7 +86,7 @@ class FeaturedItemCard extends StatelessWidget {
                       MaterialButton(
                           color: Colors.yellow,
                           onPressed: () {
-                            print('Carrito');
+                            ScaffoldMessenger.of(context).showSnackBar(addToCartSnackBar);
                           },
                           child: Text('Agregar al Carrito')),
                     ],

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:room_box_app/pages/app/store/item-description.dart';
 
+import '../snack-bar.dart';
+
 class ItemCard extends StatelessWidget {
   const ItemCard({
     super.key,
@@ -79,7 +81,7 @@ class ItemCard extends StatelessWidget {
                         child: MaterialButton(
                           color: Colors.yellow,
                           onPressed: () {
-                            print('Carrito');
+                            ScaffoldMessenger.of(context).showSnackBar(addToCartSnackBar);
                           },
                           child: Text('Agregar al Carrito'),
                         ),
