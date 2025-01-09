@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../../../components/FormInput.dart';
+
 class AddPayment extends StatelessWidget {
   const AddPayment({super.key});
 
@@ -70,28 +72,5 @@ class AddPayment extends StatelessWidget {
             ),
           ),
         ));
-  }
-}
-
-class FormInput extends StatelessWidget {
-  const FormInput({
-    super.key,
-    required this.title,
-    required this.hintText,
-  });
-  final String title;
-  final String hintText;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(title),
-        TextField(
-          decoration: InputDecoration(hintText: hintText),
-        ),
-      ],
-    );
   }
 }

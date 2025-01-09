@@ -19,7 +19,6 @@ class ItemCard extends StatelessWidget {
       },
       child: Container(
         margin: EdgeInsets.all(10),
-        height: 400,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(25),
           color: Colors.white,
@@ -62,8 +61,8 @@ class ItemCard extends StatelessWidget {
             ),
             Expanded(
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 6.0, horizontal: 16.0),
+                padding: const EdgeInsets.only(
+                    bottom: 16.0, left: 16.0, right: 16.0, top: 4.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -75,16 +74,14 @@ class ItemCard extends StatelessWidget {
                             fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                     ),
-                    Center(
-                      child: Expanded(
-                        flex: 1,
-                        child: MaterialButton(
-                          color: Colors.yellow,
-                          onPressed: () {
-                            ScaffoldMessenger.of(context).showSnackBar(addToCartSnackBar);
-                          },
-                          child: Text('Agregar al Carrito'),
-                        ),
+                    Expanded(
+                      child: MaterialButton(
+                        color: Colors.yellow,
+                        onPressed: () {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(addToCartSnackBar);
+                        },
+                        child: Text('Agregar al Carrito'),
                       ),
                     ),
                   ],

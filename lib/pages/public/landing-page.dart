@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:room_box_app/components/FormInput.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({
+class LandingPage extends StatelessWidget {
+  const LandingPage({
     super.key,
     required this.changeScreen,
-    required this.onLogin,
   });
 
   final Function changeScreen;
-  final VoidCallback onLogin;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +14,7 @@ class LoginPage extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         AspectRatio(
-          aspectRatio: 3 / 1,
+          aspectRatio: 1 / 1,
           child: Container(
             width: 50,
             decoration: BoxDecoration(
@@ -32,22 +29,28 @@ class LoginPage extends StatelessWidget {
         const SizedBox(
           height: 25,
         ),
-        const Text('Iniciar Sesión'),
-        const SizedBox(
-          height: 25,
+        MaterialButton(
+          onPressed: () {
+            changeScreen(1);
+          },
+          color: Colors.yellow,
+          child: const Text(
+            'Iniciar Sesión',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
         ),
-        FormInput(title: 'Correo Electrónico', hintText: 'mail@mail.com'),
-        const SizedBox(
-          height: 25,
-        ),
-        FormInput(title: 'Contraseña', hintText: '******'),
         const SizedBox(
           height: 25,
         ),
         MaterialButton(
-          onPressed: onLogin,
-          child: Text('Iniciar Sesión'),
+          onPressed: () {
+            changeScreen(2);
+          },
           color: Colors.yellow,
+          child: const Text(
+            'Crear Cuenta',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
         ),
       ],
     );

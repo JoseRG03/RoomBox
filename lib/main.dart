@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:room_box_app/pages/public/login.dart';
+import 'package:room_box_app/pages/public/landing-page-wrapper.dart';
 
 import 'pages/app/home.dart';
 
@@ -26,6 +26,6 @@ class _RoomBoxState extends State<RoomBox> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: appTitle,
-      home:  loggedIn ? Home(onLogOut: handleLogin) : Login(onPressed: handleLogin));
+      home:  loggedIn ? Home(onLogOut: handleLogin) : LandingPageWrapper(onLogin: handleLogin));
   }
 }

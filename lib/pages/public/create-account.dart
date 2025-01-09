@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:room_box_app/components/FormInput.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({
+class CreateAccountPage extends StatelessWidget {
+  const CreateAccountPage({
     super.key,
     required this.changeScreen,
-    required this.onLogin,
   });
 
   final Function changeScreen;
-  final VoidCallback onLogin;
 
   @override
   Widget build(BuildContext context) {
@@ -32,23 +29,7 @@ class LoginPage extends StatelessWidget {
         const SizedBox(
           height: 25,
         ),
-        const Text('Iniciar Sesión'),
-        const SizedBox(
-          height: 25,
-        ),
-        FormInput(title: 'Correo Electrónico', hintText: 'mail@mail.com'),
-        const SizedBox(
-          height: 25,
-        ),
-        FormInput(title: 'Contraseña', hintText: '******'),
-        const SizedBox(
-          height: 25,
-        ),
-        MaterialButton(
-          onPressed: onLogin,
-          child: Text('Iniciar Sesión'),
-          color: Colors.yellow,
-        ),
+        const Text('Crear Cuenta'),
       ],
     );
   }
