@@ -4,7 +4,9 @@ import 'package:flutter/services.dart';
 import '../../../../components/FormInput.dart';
 
 class AddPayment extends StatelessWidget {
-  const AddPayment({super.key});
+  AddPayment({super.key});
+
+  final TextEditingController _controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +25,7 @@ class AddPayment extends StatelessWidget {
                 FormInput(
                   title: 'Nombre Completo',
                   hintText: 'José Ramírez',
+                  controller: _controller,
                 ),
                 SizedBox(
                   height: 20,
@@ -30,6 +33,7 @@ class AddPayment extends StatelessWidget {
                 FormInput(
                   title: 'Número de Tarjeta',
                   hintText: '#### #### #### ####',
+                  controller: _controller,
                 ),
                 SizedBox(
                   height: 20,
@@ -40,6 +44,7 @@ class AddPayment extends StatelessWidget {
                       child: FormInput(
                         title: 'Fecha de Vencimiento',
                         hintText: 'mm/yyyy',
+                        controller: _controller,
                       ),
                     ),
                     SizedBox(
@@ -49,6 +54,7 @@ class AddPayment extends StatelessWidget {
                       child: FormInput(
                         title: 'CVV',
                         hintText: '###',
+                        controller: _controller,
                       ),
                     ),
                   ],
@@ -60,6 +66,7 @@ class AddPayment extends StatelessWidget {
                     child: FormInput(
                   title: 'Alias',
                   hintText: 'Agrégale un nombre para recordar tu tarjeta!',
+                  controller: _controller,
                 )),
                 Align(
                     alignment: Alignment.centerRight,

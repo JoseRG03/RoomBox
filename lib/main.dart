@@ -2,8 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:room_box_app/pages/public/landing-page-wrapper.dart';
 
 import 'pages/app/home.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() => runApp(RoomBox());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  try {
+    await dotenv.load(fileName: ".env");
+    print('Env file loaded successfully');
+  } catch (e) {
+    throw Exception('Error loading .env file: $e');
+  }
+  runApp(RoomBox());
+}
 
 class RoomBox extends StatefulWidget {
   @override

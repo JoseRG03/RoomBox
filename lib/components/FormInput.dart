@@ -5,9 +5,11 @@ class FormInput extends StatelessWidget {
     super.key,
     required this.title,
     required this.hintText,
+    required this.controller,
   });
   final String title;
   final String hintText;
+  final TextEditingController? controller;
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +19,7 @@ class FormInput extends StatelessWidget {
         Text(title),
         TextField(
           decoration: InputDecoration(hintText: hintText),
+          controller: controller,
         ),
       ],
     );

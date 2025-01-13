@@ -41,7 +41,7 @@ class _UserPaymentState extends State<UserPayment> {
                 child: const Text('Agregar Método de Pago'),
                 onPressed: () {
                   Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => const AddPayment()));
+                      MaterialPageRoute(builder: (context) => AddPayment()));
                 },
               ),
             ],
