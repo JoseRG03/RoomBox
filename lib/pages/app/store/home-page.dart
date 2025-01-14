@@ -1,8 +1,10 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:room_box_app/api/database-service.dart';
 
 import '../../../components/cards/featured-items-card.dart';
 import '../../../components/cards/item-card.dart';
+import '../../../models/storage/user-data.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -14,10 +16,15 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   bool isSearching = false;
   String searchBarValue = '';
+  DatabaseService db = DatabaseService.instance;
 
   TextEditingController fieldText = TextEditingController();
 
-  void clearText() {
+  void clearText() async {
+    UserData userData = await db.getUserData();
+
+    print("JWT: ${userData.jwt}");
+
     fieldText.clear();
   }
 

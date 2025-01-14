@@ -2,7 +2,6 @@ class LoginResponse {
   String? refresh;
   String? access;
   String? userType;
-  String? error;
 
   LoginResponse({this.refresh, this.access, this.userType});
 
@@ -10,7 +9,6 @@ class LoginResponse {
     refresh = json['refresh'];
     access = json['access'];
     userType = json['user_type'];
-    error = json['error'];
   }
 
   Map<String, dynamic> toJson() {

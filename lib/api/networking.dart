@@ -33,12 +33,10 @@ class Networking {
 
     String url = baseURL + urlSection;
 
-    print(url);
     var response =
         await http.post(Uri.parse(url), body: body, headers: headers);
     if (response.statusCode == 200) {
       var jsonResponse = jsonDecode(response.body) as Map<String, dynamic>;
-      print('Body: $response.body');
       return jsonResponse;
     } else {
       print('Request failed with status: ${response.statusCode}.');
