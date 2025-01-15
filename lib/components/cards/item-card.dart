@@ -60,7 +60,7 @@ class ItemCard extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(25),
                 image: DecorationImage(
-                    image: AssetImage(imageURL ?? 'assets/sample-furniture-images/base-image.jpg'),
+                    image: AssetImage(imageURL ?? 'assets/template-images-images/base-image.jpg'),
                     fit: BoxFit.cover),
               ),
             ),
@@ -74,7 +74,7 @@ class ItemCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        title ?? '',
+                        (title ?? '').toUpperCase(),
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                       ),

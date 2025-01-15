@@ -3,7 +3,15 @@ import 'package:flutter/material.dart';
 class CartItemCard extends StatelessWidget {
   const CartItemCard({
     super.key,
+    required this.title,
+    required this.cost,
+    required this.units,
+    required this.imageUrl,
   });
+  final String title;
+  final double cost;
+  final int units;
+  final String imageUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -31,11 +39,11 @@ class CartItemCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Sillas Marrones',
+                    title.toUpperCase(),
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
-                  Text('\$9.99'),
-                  Text('5 unidades'),
+                  Text('\$${cost} DOP'),
+                  Text('${units} unidad${units > 1 ? 'es' : ''}'),
                 ],
               ),
             ),
@@ -45,9 +53,9 @@ class CartItemCard extends StatelessWidget {
             width: 100,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(25),
-              image: const DecorationImage(
+              image: DecorationImage(
                   image: AssetImage(
-                      'assets/sample-furniture-images/work_chair.jpg'),
+                      imageUrl),
                   fit: BoxFit.cover),
             ),
           ),

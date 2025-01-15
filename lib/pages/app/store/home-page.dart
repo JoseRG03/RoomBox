@@ -27,14 +27,14 @@ class _HomePageState extends State<HomePage> {
   bool isLoading = false;
 
   @override
-  initState () {
+  initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_){
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       _getInitialData();
     });
   }
 
-  Future<void> _getInitialData () async {
+  Future<void> _getInitialData() async {
     setState(() {
       isLoading = true;
     });
@@ -50,7 +50,7 @@ class _HomePageState extends State<HomePage> {
 
   void clearText() async {
     fieldText.clear();
-    setState((){
+    setState(() {
       searchBarValue = '';
       filteredArticles = allArticles;
     });
@@ -58,68 +58,81 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return  Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
+    return Column(
             children: [
-              SearchButton(
-                  isSearching: isSearching,
-                  textController: fieldText,
-                  onChange: (value) {
-                    setState(() {
-                      searchBarValue = value;
-                      if (searchBarValue.length > 0) {
-                        isSearching = true;
-                        filteredArticles = allArticles.where((article) => article.articleName.toUpperCase().contains(searchBarValue.toUpperCase())).toList();
-                      } else {
-                        isSearching = false;
-                        filteredArticles = allArticles;
-                      }
-                    });
-                  }),
-              if (isSearching)
-                IconButton(
-                    onPressed: () {
-                      setState(() {
-                        isSearching = false;
-                        searchBarValue = '';
-                        clearText();
-                      });
-                    },
-                    icon: Icon(Icons.cancel)),
-              IconButton(onPressed: () {}, icon: Icon(Icons.filter_alt))
-            ],
-          ),
-        ),
-        SizedBox(height: 10),
-        Expanded(
-          child: ListView(
-            children: [
-              if (!isSearching) Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Text('Destacados:',
-                    style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              ),
-              if (!isSearching) SizedBox(
-                height: 400,
-                child: TopItemsCarousel(),
-              ),
-              const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Text('Todos los Productos:',
-                    style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                child: Row(
+                  children: [
+                    SearchButton(
+                        isSearching: isSearching,
+                        textController: fieldText,
+                        onChange: (value) {
+                          setState(() {
+                            searchBarValue = value;
+                            if (searchBarValue.length > 0) {
+                              isSearching = true;
+                              filteredArticles = allArticles
+                                  .where((article) => article.articleName
+                                      .toUpperCase()
+                                      .contains(searchBarValue.toUpperCase()))
+                                  .toList();
+                            } else {
+                              isSearching = false;
+                              filteredArticles = allArticles;
+                            }
+                          });
+                        }),
+                    if (isSearching)
+                      IconButton(
+                          onPressed: () {
+                            setState(() {
+                              isSearching = false;
+                              searchBarValue = '';
+                              clearText();
+                            });
+                          },
+                          icon: Icon(Icons.cancel)),
+                    IconButton(onPressed: () {}, icon: Icon(Icons.filter_alt))
+                  ],
+                ),
               ),
-              ProductList(articles: filteredArticles),
+              SizedBox(height: 10),
+              Expanded(
+                child: ListView(
+                  children: [
+                    if (!isSearching)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Text('Destacados:',
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold)),
+                      ),
+                    if (!isSearching)
+                      SizedBox(
+                        height: 400,
+                        child: isLoading
+                            ? Center(child: CircularProgressIndicator())
+                            : TopItemsCarousel(),
+                      ),
+                    const SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text('Todos los Productos:',
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold)),
+                    ),
+                    isLoading
+                        ? Padding(
+                      padding: const EdgeInsets.only(top: 75.0),
+                      child: Center(child: CircularProgressIndicator()),
+                    )
+                        : ProductList(articles: filteredArticles),
+                  ],
+                ),
+              ),
             ],
-          ),
-        ),
-      ],
-    );
+          );
   }
 }
 
@@ -173,7 +186,8 @@ class TopItemsCarousel extends StatelessWidget {
 
 class ProductList extends StatefulWidget {
   const ProductList({
-    super.key, required this.articles,
+    super.key,
+    required this.articles,
   });
   final List<Article> articles;
 
@@ -182,7 +196,6 @@ class ProductList extends StatefulWidget {
 }
 
 class _ProductListState extends State<ProductList> {
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -197,11 +210,10 @@ class _ProductListState extends State<ProductList> {
             Article currentItem = widget.articles[index];
 
             return ItemCard(
-              itemID: currentItem.articleId?.toString() ?? '',
-              imageURL: currentItem.imageUrl ?? '',
-              title: currentItem.articleName ?? '',
-              cost: currentItem.articleUnitPrice
-            );
+                itemID: currentItem.articleId?.toString() ?? '',
+                imageURL: currentItem.imageUrl ?? '',
+                title: currentItem.articleName ?? '',
+                cost: currentItem.articleUnitPrice);
           }),
     );
   }

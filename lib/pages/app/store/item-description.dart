@@ -57,7 +57,7 @@ class _ItemDescriptionState extends State<ItemDescription> {
                   borderRadius: BorderRadius.circular(25),
                   image: DecorationImage(
                       image: AssetImage(
-                          selectedArticle?.imageUrl ?? 'assets/sample-furniture-images/base-image.jpg'),
+                          selectedArticle?.imageUrl ?? 'assets/template-images/base-image.jpg'),
                       fit: BoxFit.cover),
                 ),
               ),
