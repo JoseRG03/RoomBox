@@ -1,14 +1,51 @@
 import 'package:flutter/material.dart';
 
-class ItemDescription extends StatelessWidget {
+import '../../../api/articles-service.dart';
+import '../../../models/responses/article.dart';
+
+class ItemDescription extends StatefulWidget {
   const ItemDescription({super.key, required this.itemID});
   final String itemID;
+
+  @override
+  State<ItemDescription> createState() => _ItemDescriptionState();
+}
+
+class _ItemDescriptionState extends State<ItemDescription> {
+
+  bool isLoading = false;
+  Article? selectedArticle;
+
+  @override
+  initState () {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      _getInitialData();
+    });
+  }
+
+  Future<void> _getInitialData () async {
+    setState(() {
+      isLoading = true;
+    });
+
+    print("WIDGET ID: ${widget.itemID}");
+    ArticlesService articlesService = new ArticlesService();
+    Article? article = await articlesService.getArticle(widget.itemID);
+
+    print("RECIEVED ARTICLE: ${article?.articleName}");
+
+    setState(() {
+      isLoading = false;
+      selectedArticle = article;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Padding(
+      body: isLoading ? Center(child: CircularProgressIndicator()) : Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.0),
         child: ListView(
           children: [
@@ -18,9 +55,9 @@ class ItemDescription extends StatelessWidget {
                 width: double.infinity,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(25),
-                  image: const DecorationImage(
+                  image: DecorationImage(
                       image: AssetImage(
-                          'assets/sample-furniture-images/work_chair.jpg'),
+                          selectedArticle?.imageUrl ?? 'assets/sample-furniture-images/base-image.jpg'),
                       fit: BoxFit.cover),
                 ),
               ),
@@ -31,13 +68,16 @@ class ItemDescription extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  itemID,
-                  style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
+                Expanded(
+                  child: Text(
+                    overflow: TextOverflow.ellipsis,
+                    selectedArticle?.articleName ?? '',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
                 ),
                 Text(
-                  '\$9.99',
-                  style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
+                  '\$${selectedArticle?.articleUnitPrice ?? 0.00} DOP',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
               ],
             ),

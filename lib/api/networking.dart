@@ -11,14 +11,14 @@ class Networking {
   Networking({required this.urlSection});
 
   // Await the http get response, then decode the json-formatted response.
-  Future getData() async {
+  Future getData(dynamic? headers) async {
     String baseURL = dotenv.env['API_BASE_URL'] ?? "";
 
     String url = baseURL + urlSection;
 
     print(url);
 
-    var response = await http.get(Uri.parse(url));
+    var response = await http.get(Uri.parse(url), headers: headers);
     if (response.statusCode == 200) {
       var jsonResponse = jsonDecode(response.body) as Map<String, dynamic>;
       print('Body: $response.body');

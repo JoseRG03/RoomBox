@@ -7,15 +7,21 @@ class ItemCard extends StatelessWidget {
   const ItemCard({
     super.key,
     required this.itemID,
+    required this.imageURL,
+    required this.cost,
+    required this.title,
   });
-  final String itemID;
+  final String? itemID;
+  final String? imageURL;
+  final String? cost;
+  final String? title;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => ItemDescription(itemID: itemID)));
+            builder: (context) => ItemDescription(itemID: itemID ?? '')));
       },
       child: Container(
         margin: EdgeInsets.all(10),
@@ -41,7 +47,7 @@ class ItemCard extends StatelessWidget {
                   child: Container(
                     child: Padding(
                       padding: const EdgeInsets.all(4.0),
-                      child: Text('\$499.99 DOP'),
+                      child: Text('\$${cost} DOP'),
                     ),
                     decoration: BoxDecoration(
                         color: Colors.yellow,
@@ -53,9 +59,8 @@ class ItemCard extends StatelessWidget {
               ]),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(25),
-                image: const DecorationImage(
-                    image: AssetImage(
-                        'assets/sample-furniture-images/work_chair.jpg'),
+                image: DecorationImage(
+                    image: AssetImage(imageURL ?? 'assets/sample-furniture-images/base-image.jpg'),
                     fit: BoxFit.cover),
               ),
             ),
@@ -69,7 +74,7 @@ class ItemCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        "Card Title",
+                        title ?? '',
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                       ),

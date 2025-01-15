@@ -1,10 +1,12 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:room_box_app/api/database-service.dart';
+import 'package:room_box_app/models/responses/articles-list.dart';
 
+import '../../../api/articles-service.dart';
 import '../../../components/cards/featured-items-card.dart';
 import '../../../components/cards/item-card.dart';
-import '../../../models/storage/user-data.dart';
+import '../../../models/responses/article.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -20,17 +22,43 @@ class _HomePageState extends State<HomePage> {
 
   TextEditingController fieldText = TextEditingController();
 
+  List<Article> allArticles = [];
+  List<Article> filteredArticles = [];
+  bool isLoading = false;
+
+  @override
+  initState () {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      _getInitialData();
+    });
+  }
+
+  Future<void> _getInitialData () async {
+    setState(() {
+      isLoading = true;
+    });
+    ArticlesService articlesService = new ArticlesService();
+    List<Article> articleList = await articlesService.getAllArticles();
+
+    setState(() {
+      isLoading = false;
+      allArticles = articleList;
+      filteredArticles = articleList;
+    });
+  }
+
   void clearText() async {
-    UserData userData = await db.getUserData();
-
-    print("JWT: ${userData.jwt}");
-
     fieldText.clear();
+    setState((){
+      searchBarValue = '';
+      filteredArticles = allArticles;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return  Column(
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -44,8 +72,10 @@ class _HomePageState extends State<HomePage> {
                       searchBarValue = value;
                       if (searchBarValue.length > 0) {
                         isSearching = true;
+                        filteredArticles = allArticles.where((article) => article.articleName.toUpperCase().contains(searchBarValue.toUpperCase())).toList();
                       } else {
                         isSearching = false;
+                        filteredArticles = allArticles;
                       }
                     });
                   }),
@@ -84,7 +114,7 @@ class _HomePageState extends State<HomePage> {
                     style:
                         TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               ),
-              ProductList(),
+              ProductList(articles: filteredArticles),
             ],
           ),
         ),
@@ -141,10 +171,17 @@ class TopItemsCarousel extends StatelessWidget {
   }
 }
 
-class ProductList extends StatelessWidget {
+class ProductList extends StatefulWidget {
   const ProductList({
-    super.key,
+    super.key, required this.articles,
   });
+  final List<Article> articles;
+
+  @override
+  State<ProductList> createState() => _ProductListState();
+}
+
+class _ProductListState extends State<ProductList> {
 
   @override
   Widget build(BuildContext context) {
@@ -155,10 +192,15 @@ class ProductList extends StatelessWidget {
           shrinkWrap: true,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2),
-          itemCount: 20,
+          itemCount: widget.articles.length,
           itemBuilder: (context, index) {
+            Article currentItem = widget.articles[index];
+
             return ItemCard(
-              itemID: (index + 1).toString(),
+              itemID: currentItem.articleId?.toString() ?? '',
+              imageURL: currentItem.imageUrl ?? '',
+              title: currentItem.articleName ?? '',
+              cost: currentItem.articleUnitPrice
             );
           }),
     );
