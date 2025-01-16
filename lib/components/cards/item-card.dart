@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:room_box_app/pages/app/store/item-description.dart';
 
+import '../../api/database-service.dart';
 import '../snack-bar.dart';
 
 class ItemCard extends StatelessWidget {
@@ -39,29 +40,43 @@ class ItemCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              height: 100,
-              width: double.infinity,
-              child: Stack(children: [
-                Positioned(
-                  child: Container(
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Text('\$${cost} DOP'),
-                    ),
-                    decoration: BoxDecoration(
-                        color: Colors.yellow,
-                        borderRadius: BorderRadius.circular(5)),
+            ClipRRect(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+              child: Container(
+                height: 100,
+                width: double.infinity,
+                child: Stack(children: [
+                  Image.network(
+                    imageURL ?? '',
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    height: double.infinity,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Image.asset(
+                        'assets/template-images/base-image.jpg',
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        height: double.infinity,
+                      );
+                    },
                   ),
-                  top: 20,
-                  right: 20,
-                )
-              ]),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25),
-                image: DecorationImage(
-                    image: AssetImage(imageURL ?? 'assets/template-images-images/base-image.jpg'),
-                    fit: BoxFit.cover),
+                  Positioned(
+                    child: Container(
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Text('\$${cost} DOP'),
+                      ),
+                      decoration: BoxDecoration(
+                          color: Colors.yellow,
+                          borderRadius: BorderRadius.circular(5)),
+                    ),
+                    top: 20,
+                    right: 20,
+                  )
+                ]),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(25),
+                ),
               ),
             ),
             Expanded(
@@ -82,7 +97,15 @@ class ItemCard extends StatelessWidget {
                     Expanded(
                       child: MaterialButton(
                         color: Colors.yellow,
-                        onPressed: () {
+                        onPressed: () async {
+                          DatabaseService db = DatabaseService.instance;
+                          await db.addToShoppingCart(
+                              itemID ?? '',
+                              title ?? '',
+                              double.tryParse(cost ?? '') ?? 0,
+                              imageURL ??
+                                  'assets/template-images-images/base-image.jpg');
+
                           ScaffoldMessenger.of(context)
                               .showSnackBar(addToCartSnackBar);
                         },

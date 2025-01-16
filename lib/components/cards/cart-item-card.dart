@@ -48,16 +48,22 @@ class CartItemCard extends StatelessWidget {
               ),
             ),
           ),
-          Container(
-            height: 100,
-            width: 100,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(25),
-              image: DecorationImage(
-                  image: AssetImage(
-                      imageUrl),
-                  fit: BoxFit.cover),
-            ),
+          ClipRRect(
+            borderRadius: BorderRadius.horizontal(right: Radius.circular(25)),
+            child: Container(
+                height: 100,
+                width: 100,
+                child: Image.network(
+                  imageUrl,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Image.asset(
+                      'assets/template-images/base-image.jpg',
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      height: double.infinity,
+                    );
+                  },
+                )),
           ),
         ],
       ),

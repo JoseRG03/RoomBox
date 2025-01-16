@@ -33,6 +33,8 @@ class ArticlesService {
 
     final data = await networking.getData(headers);
 
+    print('Data: ${data}');
+
     try {
       Article articlesData = Article.fromJson(data);
       return articlesData;

@@ -1,6 +1,8 @@
 import 'package:path/path.dart';
+import 'package:room_box_app/models/storage/shopping-cart-data.dart';
 import 'package:room_box_app/models/storage/shopping_cart_item.dart';
 import 'package:room_box_app/models/storage/user-data.dart';
+import 'package:room_box_app/pages/app/store/total-costs.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
 
@@ -111,19 +113,37 @@ class DatabaseService {
     return 1;
   }
 
-  Future<List<ShoppingCartItem>> getShoppingCart() async {
+  Future<ShoppingCartData> getShoppingCart() async {
     final db = await database;
     final map = await db.rawQuery('SELECT * FROM $_cartTableName');
+    double total = 0;
+    double taxes = 0;
+    double subTotal = 0;
 
-    return map.map((item) {
+    List<ShoppingCartItem> items = map.map((item) {
       return ShoppingCartItem.fromJson(item);
     }).toList();
+
+
+    items.forEach((item) {
+      total += (item.shoppingCartUnitPrice ?? 0) * (item.shoppingCartItemAmount ?? 0);
+    });
+
+    taxes = total * 0.18;
+    subTotal = total + taxes;
+
+
+    TotalCosts totalCosts = TotalCosts(subTotal: subTotal.toStringAsFixed(2), taxes: taxes.toStringAsFixed(2), total: total.toStringAsFixed(2));
+
+    return ShoppingCartData(
+        items: items,
+        totalCosts: totalCosts);
   }
 
-  Future<int> clearShoppingCart() async {
+  Future<ShoppingCartData> clearShoppingCart() async {
     final db = await database;
-    await db.delete(_userTableName);
+    await db.delete(_cartTableName);
 
-    return 1;
+    return await getShoppingCart();
   }
 }

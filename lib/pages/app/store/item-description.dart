@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:room_box_app/api/database-service.dart';
 
 import '../../../api/articles-service.dart';
+import '../../../components/snack-bar.dart';
 import '../../../models/responses/article.dart';
 
 class ItemDescription extends StatefulWidget {
@@ -14,6 +16,7 @@ class ItemDescription extends StatefulWidget {
 class _ItemDescriptionState extends State<ItemDescription> {
 
   bool isLoading = false;
+  bool isAddingToCart = false;
   Article? selectedArticle;
 
   @override
@@ -29,11 +32,10 @@ class _ItemDescriptionState extends State<ItemDescription> {
       isLoading = true;
     });
 
-    print("WIDGET ID: ${widget.itemID}");
     ArticlesService articlesService = new ArticlesService();
     Article? article = await articlesService.getArticle(widget.itemID);
 
-    print("RECIEVED ARTICLE: ${article?.articleName}");
+    print("Image url: ${selectedArticle?.image}");
 
     setState(() {
       isLoading = false;
@@ -49,16 +51,29 @@ class _ItemDescriptionState extends State<ItemDescription> {
         padding: EdgeInsets.symmetric(horizontal: 16.0),
         child: ListView(
           children: [
-            AspectRatio(
-              aspectRatio: 1 / 1,
+            ClipRRect(
+              borderRadius: BorderRadius.circular(25),
               child: Container(
+                height: 450,
                 width: double.infinity,
+                child: Stack(children: [
+                  Image.network(
+                    selectedArticle?.image ?? '',
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    height: double.infinity,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Image.asset(
+                        'assets/template-images/base-image.jpg',
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        height: double.infinity,
+                      );
+                    },
+                  ),
+                ]),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(25),
-                  image: DecorationImage(
-                      image: AssetImage(
-                          selectedArticle?.imageUrl ?? 'assets/template-images/base-image.jpg'),
-                      fit: BoxFit.cover),
                 ),
               ),
             ),
@@ -91,8 +106,18 @@ class _ItemDescriptionState extends State<ItemDescription> {
             ),
             MaterialButton(
               color: Colors.yellow,
-              onPressed: () {
-                print('Carrito');
+              onPressed: () async {
+                setState(() {
+                  isAddingToCart = true;
+                });
+                DatabaseService db = DatabaseService.instance;
+                await db.addToShoppingCart(widget.itemID, selectedArticle?.articleName ?? '', double.tryParse(selectedArticle?.articleUnitPrice ?? '') ?? 0, selectedArticle?.imageUrl ?? '');
+
+                ScaffoldMessenger.of(context).showSnackBar(addToCartSnackBar);
+
+                setState(() {
+                  isAddingToCart = true;
+                });
               },
               child: Text('Agregar al Carrito'),
             ),
