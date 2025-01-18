@@ -9,6 +9,7 @@ class Article {
   final DateTime createdAt;
   final DateTime updatedAt;
   final dynamic image;
+  final String? description;
 
   Article({
     required this.articleId,
@@ -21,6 +22,7 @@ class Article {
     required this.createdAt,
     required this.updatedAt,
     required this.image,
+    this.description,
   });
 
   factory Article.fromJson(Map<String, dynamic> json) => Article(
@@ -34,6 +36,7 @@ class Article {
     createdAt: DateTime.parse(json["created_at"]),
     updatedAt: DateTime.parse(json["updated_at"]),
     image: json["image"],
+    description: json["description"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -47,5 +50,6 @@ class Article {
     "created_at": createdAt.toIso8601String(),
     "updated_at": updatedAt.toIso8601String(),
     "image": image,
+    "description": description,
   };
 }

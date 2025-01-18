@@ -5,10 +5,18 @@ import '../snack-bar.dart';
 
 class FeaturedItemCard extends StatelessWidget {
   const FeaturedItemCard({
-    super.key, required this.itemID,
+    super.key,
+    required this.itemID,
+    required this.title,
+    required this.description,
+    required this.cost,
+    required this.image,
   });
   final String itemID;
-
+  final String title;
+  final String description;
+  final String cost;
+  final String image;
 
   @override
   Widget build(BuildContext context) {
@@ -28,30 +36,40 @@ class FeaturedItemCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            height: 200,
-            width: double.infinity,
-            child: Stack(children: [
-              Positioned(
-                child: Container(
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Text('\$499.99 DOP'),
-                  ),
-                  decoration: BoxDecoration(
-                      color: Colors.yellow,
-                      borderRadius: BorderRadius.circular(5)),
+          ClipRRect(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+            child: Container(
+              height: 200,
+              width: double.infinity,
+              child: Stack(children: [
+                Image.network(
+                  image ?? '',
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  height: double.infinity,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Image.asset(
+                      'assets/template-images/base-image.jpg',
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      height: double.infinity,
+                    );
+                  },
                 ),
-                top: 20,
-                right: 20,
-              )
-            ]),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(25),
-              image: const DecorationImage(
-                  image: AssetImage(
-                      'assets/sample-furniture-images/work_chair.jpg'),
-                  fit: BoxFit.cover),
+                Positioned(
+                  child: Container(
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Text('\$${cost} DOP'),
+                    ),
+                    decoration: BoxDecoration(
+                        color: Colors.yellow,
+                        borderRadius: BorderRadius.circular(5)),
+                  ),
+                  top: 20,
+                  right: 20,
+                ),
+              ]),
             ),
           ),
           Expanded(
@@ -63,13 +81,12 @@ class FeaturedItemCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Card Title ${itemID}",
-                    style: TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold),
+                    title,
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 5),
                   Text(
-                    'Greyhound divisively hello coldly wonder marginally far upon excluding. Greyhound divisively hello coldly wonder marginally far upon excluding.',
+                    description,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -79,14 +96,16 @@ class FeaturedItemCard extends StatelessWidget {
                       MaterialButton(
                           color: Colors.grey,
                           onPressed: () {
-                            Navigator.of(context).push(
-                                MaterialPageRoute(builder: (context) => ItemDescription(itemID: itemID)));
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) =>
+                                    ItemDescription(itemID: itemID)));
                           },
                           child: Text('Ver Detalles')),
                       MaterialButton(
                           color: Colors.yellow,
                           onPressed: () {
-                            ScaffoldMessenger.of(context).showSnackBar(addToCartSnackBar);
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(addToCartSnackBar);
                           },
                           child: Text('Agregar al Carrito')),
                     ],

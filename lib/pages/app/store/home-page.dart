@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:room_box_app/api/database-service.dart';
+import 'package:room_box_app/const.dart';
 import 'package:room_box_app/models/responses/articles-list.dart';
 
 import '../../../api/articles-service.dart';
@@ -24,7 +25,9 @@ class _HomePageState extends State<HomePage> {
 
   List<Article> allArticles = [];
   List<Article> filteredArticles = [];
-  bool isLoading = false;
+  List<Article> featuredArticles = [];
+  bool isLoadingAllArticles = false;
+  bool isLoadingFeaturedArticles = false;
 
   @override
   initState() {
@@ -36,15 +39,24 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _getInitialData() async {
     setState(() {
-      isLoading = true;
+      isLoadingAllArticles = true;
+      isLoadingFeaturedArticles = true;
     });
-    ArticlesService articlesService = new ArticlesService();
-    List<Article> articleList = await articlesService.getAllArticles();
 
-    setState(() {
-      isLoading = false;
-      allArticles = articleList;
-      filteredArticles = articleList;
+    ArticlesService articlesService = new ArticlesService();
+    articlesService.getAllArticles().then((List<Article> result) {
+      setState(() {
+        isLoadingAllArticles = false;
+        allArticles = result;
+        filteredArticles = result;
+      });
+    });
+
+    articlesService.getFeaturedArticles().then((List<Article> result) {
+      setState(() {
+        featuredArticles = result;
+        isLoadingFeaturedArticles = false;
+      });
     });
   }
 
@@ -59,80 +71,80 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
             children: [
+              SearchButton(
+                  isSearching: isSearching,
+                  textController: fieldText,
+                  onChange: (value) {
+                    setState(() {
+                      searchBarValue = value;
+                      if (searchBarValue.length > 0) {
+                        isSearching = true;
+                        filteredArticles = allArticles
+                            .where((article) => article.articleName
+                                .toUpperCase()
+                                .contains(searchBarValue.toUpperCase()))
+                            .toList();
+                      } else {
+                        isSearching = false;
+                        filteredArticles = allArticles;
+                      }
+                    });
+                  }),
+              if (isSearching)
+                IconButton(
+                    onPressed: () {
+                      setState(() {
+                        isSearching = false;
+                        searchBarValue = '';
+                        clearText();
+                      });
+                    },
+                    icon: Icon(Icons.cancel)),
+              IconButton(onPressed: () {}, icon: Icon(Icons.filter_alt))
+            ],
+          ),
+        ),
+        SizedBox(height: 10),
+        Expanded(
+          child: ListView(
+            children: [
+              if (!isSearching)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Text('Destacados:',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                ),
+              if (!isSearching)
+                SizedBox(
+                  height: 400,
+                  child: isLoadingFeaturedArticles
+                      ? Center(child: CircularProgressIndicator())
+                      : TopItemsCarousel(items: featuredArticles),
+                ),
+              const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  children: [
-                    SearchButton(
-                        isSearching: isSearching,
-                        textController: fieldText,
-                        onChange: (value) {
-                          setState(() {
-                            searchBarValue = value;
-                            if (searchBarValue.length > 0) {
-                              isSearching = true;
-                              filteredArticles = allArticles
-                                  .where((article) => article.articleName
-                                      .toUpperCase()
-                                      .contains(searchBarValue.toUpperCase()))
-                                  .toList();
-                            } else {
-                              isSearching = false;
-                              filteredArticles = allArticles;
-                            }
-                          });
-                        }),
-                    if (isSearching)
-                      IconButton(
-                          onPressed: () {
-                            setState(() {
-                              isSearching = false;
-                              searchBarValue = '';
-                              clearText();
-                            });
-                          },
-                          icon: Icon(Icons.cancel)),
-                    IconButton(onPressed: () {}, icon: Icon(Icons.filter_alt))
-                  ],
-                ),
+                child: Text('Todos los Productos:',
+                    style:
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               ),
-              SizedBox(height: 10),
-              Expanded(
-                child: ListView(
-                  children: [
-                    if (!isSearching)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Text('Destacados:',
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold)),
-                      ),
-                    if (!isSearching)
-                      SizedBox(
-                        height: 400,
-                        child: isLoading
-                            ? Center(child: CircularProgressIndicator())
-                            : TopItemsCarousel(),
-                      ),
-                    const SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Text('Todos los Productos:',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold)),
-                    ),
-                    isLoading
-                        ? Padding(
+              isLoadingAllArticles
+                  ? Padding(
                       padding: const EdgeInsets.only(top: 75.0),
                       child: Center(child: CircularProgressIndicator()),
                     )
-                        : ProductList(articles: filteredArticles),
-                  ],
-                ),
-              ),
+                  : ProductList(articles: filteredArticles),
             ],
-          );
+          ),
+        ),
+      ],
+    );
   }
 }
 
@@ -167,19 +179,30 @@ class _SearchButtonState extends State<SearchButton> {
 class TopItemsCarousel extends StatelessWidget {
   const TopItemsCarousel({
     super.key,
+    required this.items,
   });
+
+  final List<Article> items;
 
   @override
   Widget build(BuildContext context) {
-    return CarouselSlider(
-      options: CarouselOptions(
-        height: 400,
-      ),
-      items: List<Widget>.generate(5, (int index) {
-        return FeaturedItemCard(
-          itemID: 'D${(index + 1).toString()}',
-        );
-      }),
+    return CarouselSlider.builder(
+      options: CarouselOptions(height: 400),
+      itemCount: items.length,
+      itemBuilder: (BuildContext context, int itemIndex, int pageViewIndex) {
+        if (items.length > 0) {
+          return FeaturedItemCard(
+            itemID: items[itemIndex].articleId.toString(),
+            title: items[itemIndex].articleName,
+            cost: items[itemIndex].articleUnitPrice,
+            image: items[itemIndex].image ?? baseImageURL,
+            description: items[itemIndex].description ?? 'Incredible Item!',
+          );
+        }
+
+        return Container();
+
+      },
     );
   }
 }

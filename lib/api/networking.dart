@@ -21,7 +21,7 @@ class Networking {
     var response = await http.get(Uri.parse(url), headers: headers);
     if (response.statusCode == 200) {
       var jsonResponse = jsonDecode(response.body) as Map<String, dynamic>;
-      print('Body: $response.body');
+      // print('Body: $response.body');
       return jsonResponse;
     } else {
       print('Request failed with status: ${response.statusCode}.');

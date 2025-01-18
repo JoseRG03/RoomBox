@@ -1,0 +1,1 @@
+const baseImageURL = 'assets/template-images/base-image.jpg';
