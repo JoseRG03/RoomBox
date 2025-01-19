@@ -192,7 +192,7 @@ class TopItemsCarousel extends StatelessWidget {
       itemBuilder: (BuildContext context, int itemIndex, int pageViewIndex) {
         if (items.length > 0) {
           return FeaturedItemCard(
-            itemID: items[itemIndex].articleId.toString(),
+            itemID: (items[itemIndex].articleId ?? '1').toString(),
             title: items[itemIndex].articleName,
             cost: items[itemIndex].articleUnitPrice,
             image: items[itemIndex].image ?? baseImageURL,

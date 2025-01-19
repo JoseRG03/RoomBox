@@ -166,6 +166,7 @@ class ItemList extends StatelessWidget {
           ShoppingCartItem currentItem = items[index];
 
           return CartItemCard(
+              itemId: currentItem.shoppingCartItemId.toString(),
               title: currentItem.shoppingCartItemName,
               cost: currentItem.shoppingCartUnitPrice,
               units: currentItem.shoppingCartItemAmount,

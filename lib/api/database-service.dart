@@ -82,8 +82,7 @@ class DatabaseService {
     return UserData.fromJson(map[0]);
   }
 
-  Future<int> addToShoppingCart(String itemId, String itemName,
-      double unitPrice, String itemImageUrl) async {
+  Future<int> addToShoppingCart(String itemId, String itemName, double unitPrice, String itemImageUrl) async {
     final db = await database;
 
     var result = await db.rawQuery(
@@ -146,4 +145,49 @@ class DatabaseService {
 
     return await getShoppingCart();
   }
+
+  Future<int> addToQuantity(String id) async {
+    final db = await database;
+
+    var result = await db.rawQuery(
+        'SELECT * FROM $_cartTableName WHERE $_cartItemId = ?', [id]);
+
+    await db.update(
+      _cartTableName,
+      {
+        _cartItemAmount: (result[0][_cartItemAmount] as int) + 1,
+      },
+      where: '$_cartItemId = ?',
+      whereArgs: [id],
+    );
+    print('Added to quantity for item in Shopping cart');
+
+    return 1;
+  }
+
+  Future<int> removeFromQuantity(String id) async {
+    final db = await database;
+
+    var result = await db.rawQuery(
+        'SELECT * FROM $_cartTableName WHERE $_cartItemId = ?', [id]);
+
+    await db.update(
+      _cartTableName,
+      {
+        _cartItemAmount: (result[0][_cartItemAmount] as int) - 1,
+      },
+      where: '$_cartItemId = ?',
+      whereArgs: [id],
+    );
+    print('Added to quantity for item in Shopping cart');
+
+    return 1;
+  }
+
+  Future<void> removeItem(String id) async {
+    final db = await database;
+
+    await db.delete(_cartTableName, where: '$id = $_cartItemId');
+  }
+
 }

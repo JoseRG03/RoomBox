@@ -90,6 +90,8 @@ class ItemCard extends StatelessWidget {
                     Expanded(
                       child: Text(
                         (title ?? '').toUpperCase(),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                       ),

@@ -26,7 +26,7 @@ class ViewVoucher extends StatelessWidget {
               Expanded(
                 child: ListView(
                   children: [
-                    CartItemCard(units: 10, cost: 9.99, title: 'Uberflaksen', imageUrl: 'assets/template-images/base-image.jpg'),
+                    CartItemCard(itemId: "1", units: 10, cost: 9.99, title: 'Uberflaksen', imageUrl: 'assets/template-images/base-image.jpg'),
                   ],
                 ),
               ),

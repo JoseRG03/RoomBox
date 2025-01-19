@@ -1,23 +1,64 @@
 import 'package:flutter/material.dart';
+import 'package:room_box_app/api/database-service.dart';
 
-class CartItemCard extends StatelessWidget {
+class CartItemCard extends StatefulWidget {
   const CartItemCard({
     super.key,
     required this.title,
     required this.cost,
     required this.units,
-    required this.imageUrl,
+    required this.imageUrl, required this.itemId,
   });
+  final String? itemId;
   final String title;
   final double cost;
   final int units;
   final String imageUrl;
 
   @override
+  State<CartItemCard> createState() => _CartItemCardState();
+}
+
+class _CartItemCardState extends State<CartItemCard> {
+  int quantity = 1;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(() {
+      quantity = widget.units;
+    });
+  }
+  void addToQuantity() {
+    DatabaseService db = DatabaseService.instance;
+
+    if (widget.itemId != null) {
+      db.addToQuantity(widget.itemId ?? '');
+    }
+
+    setState(() {
+      quantity += 1;
+    });
+  }
+
+  void removeFromQuantity() {
+    DatabaseService db = DatabaseService.instance;
+
+    if (widget.itemId != null) {
+      db.removeFromQuantity(widget.itemId ?? '');
+    }
+
+    setState(() {
+      quantity -= 1;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
-      height: 100,
       margin: EdgeInsets.all(10),
+      height: 115,
       width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(25),
@@ -37,33 +78,43 @@ class CartItemCard extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    title.toUpperCase(),
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    widget.title.toUpperCase(),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  Text('\$${cost} DOP'),
-                  Text('${units} unidad${units > 1 ? 'es' : ''}'),
+                  Text('\$${widget.cost} DOP'),
+                  Row(
+                    children: [
+                      Text('${quantity} unidad${quantity > 1 ? 'es' : ''}'),
+                      IconButton(onPressed: addToQuantity, icon: Icon(Icons.add), iconSize: 15,),
+                      quantity > 1 ? IconButton(onPressed: removeFromQuantity, icon: Icon(Icons.remove), iconSize: 15,) : Container(),
+                    ],
+                  ),
                 ],
               ),
             ),
           ),
-          ClipRRect(
-            borderRadius: BorderRadius.horizontal(right: Radius.circular(25)),
-            child: Container(
-                height: 100,
-                width: 100,
-                child: Image.network(
-                  imageUrl,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Image.asset(
-                      'assets/template-images/base-image.jpg',
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                      height: double.infinity,
-                    );
-                  },
-                )),
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(30),
+              child: Container(
+                  height: 150,
+                  width: 100,
+                  child: Image.network(
+                    widget.imageUrl,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Image.asset(
+                        'assets/template-images/base-image.jpg',
+                        fit: BoxFit.cover,
+                      );
+                    },
+                  )),
+            ),
           ),
         ],
       ),
