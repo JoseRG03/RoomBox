@@ -247,6 +247,17 @@ class DatabaseService {
     return cards;
   }
 
+  Future<PaymentMethod> getCurrentPaymentMethod() async {
+    final db = await database;
+    final map = await db.rawQuery('SELECT * FROM $_paymentMethodTableName WHERE $_paymentMethodCurrent = 1');
+
+
+    List<PaymentMethod> cards =
+    map.map((item) => PaymentMethod.fromJson(item)).toList();
+
+    return cards[0];
+  }
+
   Future<void> removePaymentMethod(String id) async {
     final db = await database;
 

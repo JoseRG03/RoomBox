@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:room_box_app/api/database-service.dart';
 import 'package:room_box_app/api/orders-service.dart';
+import 'package:room_box_app/models/storage/payment-method.dart';
 import 'package:room_box_app/models/storage/shopping-cart-data.dart';
 import 'package:room_box_app/models/storage/shopping_cart_item.dart';
 import 'package:room_box_app/pages/app/cart/payment-complete.dart';
@@ -19,6 +20,7 @@ class CartPage extends StatefulWidget {
 class _CartPageState extends State<CartPage> {
   List<ShoppingCartItem> itemList = [];
   TotalCosts cartCosts = TotalCosts();
+  PaymentMethod? selectedPaymentMethod;
   bool isLoading = false;
   bool isSending = false;
   DatabaseService db = DatabaseService.instance;
@@ -33,9 +35,12 @@ class _CartPageState extends State<CartPage> {
 
   Future<void> _getInitialData() async {
     ShoppingCartData data = await db.getShoppingCart();
+    PaymentMethod currentPaymentMethod = await db.getCurrentPaymentMethod();
+
     setState(() {
       itemList = data.items;
       cartCosts = data.totalCosts;
+      selectedPaymentMethod = currentPaymentMethod;
     });
   }
 
@@ -131,6 +136,7 @@ class _CartPageState extends State<CartPage> {
                         )),
                     SelectedPaymentMethodCard(
                       isEditable: true,
+                      paymentMethod: selectedPaymentMethod,
                     ),
                     Align(
                       alignment: Alignment.centerRight,
@@ -141,7 +147,18 @@ class _CartPageState extends State<CartPage> {
                             isSending = true;
                           });
                           try {
-                            final response = await ordersService.placeOrder();
+                            final response = await ordersService.placeOrder(
+                                selectedPaymentMethod,
+                                cartCosts.subTotal,
+                                cartCosts.taxes,
+                                cartCosts.total);
+
+                            if (response == 1) {
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                  content: Text(
+                                      'Ha ocurrido un error. Favor intente más tarde')));
+                              return;
+                            }
                             db.clearShoppingCart();
                             setState(() {
                               itemList = [];
@@ -152,11 +169,21 @@ class _CartPageState extends State<CartPage> {
                                     'Ha ocurrido un error. Favor intente más tarde')));
                           }
 
-                          setState(() {
-                            isSending = false;
-                          });
-                          Navigator.of(context).push(MaterialPageRoute(
+
+                          bool val = await Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => const PaymentComplete()));
+
+                          print('Calling current payment method... $val');
+
+                          PaymentMethod currentPaymentMethod =
+                              await db.getCurrentPaymentMethod();
+
+                          setState(() {
+                            print(
+                                'Current Payment Method: ${currentPaymentMethod.alias}');
+                            isSending = false;
+                            selectedPaymentMethod = currentPaymentMethod;
+                          });
                         },
                         color: Colors.yellow,
                         child: isSending

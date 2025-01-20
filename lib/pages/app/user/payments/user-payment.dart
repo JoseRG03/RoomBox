@@ -12,7 +12,7 @@ class UserPayment extends StatefulWidget {
 }
 
 class _UserPaymentState extends State<UserPayment> {
-  int selectedPaymentMethod = 5;
+  PaymentMethod? selectedPaymentMethod;
   bool isLoading = false;
   List<PaymentMethod> paymentMethodList = [];
 
@@ -31,8 +31,10 @@ class _UserPaymentState extends State<UserPayment> {
 
     List<PaymentMethod> paymentMethods = await db.getAllPaymentMethods();
 
+    PaymentMethod currentMethod = await db.getCurrentPaymentMethod();
+
     setState(() {
-      print("Payment method list length: ${paymentMethods.length.toString()}");
+      selectedPaymentMethod = currentMethod;
       paymentMethodList = paymentMethods;
       isLoading = false;
     });
@@ -65,7 +67,7 @@ class _UserPaymentState extends State<UserPayment> {
 
     setState(() {
       paymentMethodList = updatedMethods;
-      selectedPaymentMethod = index;
+      selectedPaymentMethod = updatedMethods[index];
     });
   }
 
@@ -74,6 +76,12 @@ class _UserPaymentState extends State<UserPayment> {
     return Scaffold(
         appBar: AppBar(
           title: Text("Métodos de Pago"),
+          leading: IconButton(
+              onPressed: () {
+                print("Exiting...");
+                Navigator.of(context).pop(true);
+              },
+              icon: Icon(Icons.arrow_back)),
         ),
         body: Center(
           child: Column(
@@ -100,8 +108,9 @@ class _UserPaymentState extends State<UserPayment> {
               TextButton(
                 child: const Text('Agregar Método de Pago'),
                 onPressed: () async {
-                  List<PaymentMethod>? newList = await Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => AddPayment()));
+                  List<PaymentMethod>? newList = await Navigator.of(context)
+                      .push(MaterialPageRoute(
+                          builder: (context) => AddPayment()));
 
                   if (newList != null) {
                     setState(() {

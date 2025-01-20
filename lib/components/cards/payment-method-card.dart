@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:room_box_app/api/database-service.dart';
+import 'package:room_box_app/const.dart';
 
 import '../../models/storage/payment-method.dart';
 import '../../pages/app/user/payments/user-payment.dart';
@@ -8,10 +9,11 @@ import '../../pages/app/user/payments/user-payment.dart';
 class SelectedPaymentMethodCard extends StatelessWidget {
   const SelectedPaymentMethodCard({
     super.key,
-    required this.isEditable,
+    required this.isEditable, this.paymentMethod,
   });
 
   final bool isEditable;
+  final PaymentMethod? paymentMethod;
 
   @override
   Widget build(BuildContext context) {
@@ -39,21 +41,21 @@ class SelectedPaymentMethodCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Personal',
+                    paymentMethod?.alias ?? '',
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                   Row(
                     children: [
-                      Text('Termina en 1335'),
+                      Text('Termina en ${(paymentMethod?.number.toString() ?? "    ").substring((paymentMethod?.number.toString() ?? "    ").length - 4)}'),
                       SizedBox(width: 10),
                       Container(
                         height: 25,
                         width: 25,
                         decoration: BoxDecoration(
-                          image: const DecorationImage(
+                          image: DecorationImage(
                               image: AssetImage(
-                                  'assets/template-images/master-card-logo.jpg'),
-                              fit: BoxFit.cover),
+                                  paymentMethod?.image ?? baseImageURL),
+                              fit: BoxFit.fitWidth),
                         ),
                       ),
                     ],

@@ -35,6 +35,7 @@ class Networking {
     var response =
         await http.post(Uri.parse(url), body: body, headers: headers);
 
+    print("RES ${urlSection}: ${response.body}");
     if (response.statusCode == 200 || response.statusCode == 201) {
       var jsonResponse = jsonDecode(response.body) as Map<String, dynamic>;
       return jsonResponse;
