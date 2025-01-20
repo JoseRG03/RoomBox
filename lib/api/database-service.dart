@@ -1,5 +1,6 @@
 import 'package:path/path.dart';
 import 'package:room_box_app/const.dart';
+import 'package:room_box_app/models/storage/payment-method.dart';
 import 'package:room_box_app/models/storage/shopping-cart-data.dart';
 import 'package:room_box_app/models/storage/shopping_cart_item.dart';
 import 'package:room_box_app/models/storage/user-data.dart';
@@ -28,6 +29,7 @@ class DatabaseService {
   final String _paymentMethodAlias = 'payment_method_alias';
   final String _paymentMethodNumber = 'payment_method_number';
   final String _paymentMethodImage = 'payment_method_image';
+  final String _paymentMethodCurrent = 'payment_method_current';
 
   DatabaseService._constructor();
 
@@ -66,9 +68,9 @@ class DatabaseService {
          $_paymentMethodAlias TEXT NOT NULL,
          $_paymentMethodNumber INTEGER NOT NULL,
          $_paymentMethodImage TEXT NOT NULL,
+         $_paymentMethodCurrent INTEGER NOT NULL
        )
       ''');
-
       },
     );
 
@@ -98,7 +100,8 @@ class DatabaseService {
     return UserData.fromJson(map[0]);
   }
 
-  Future<int> addToShoppingCart(String itemId, String itemName, double unitPrice, String itemImageUrl) async {
+  Future<int> addToShoppingCart(String itemId, String itemName,
+      double unitPrice, String itemImageUrl) async {
     final db = await database;
 
     var result = await db.rawQuery(
@@ -139,20 +142,20 @@ class DatabaseService {
       return ShoppingCartItem.fromJson(item);
     }).toList();
 
-
     items.forEach((item) {
-      total += (item.shoppingCartUnitPrice ?? 0) * (item.shoppingCartItemAmount ?? 0);
+      total += (item.shoppingCartUnitPrice ?? 0) *
+          (item.shoppingCartItemAmount ?? 0);
     });
 
     taxes = total * 0.18;
     subTotal = total + taxes;
 
+    TotalCosts totalCosts = TotalCosts(
+        subTotal: subTotal.toStringAsFixed(2),
+        taxes: taxes.toStringAsFixed(2),
+        total: total.toStringAsFixed(2));
 
-    TotalCosts totalCosts = TotalCosts(subTotal: subTotal.toStringAsFixed(2), taxes: taxes.toStringAsFixed(2), total: total.toStringAsFixed(2));
-
-    return ShoppingCartData(
-        items: items,
-        totalCosts: totalCosts);
+    return ShoppingCartData(items: items, totalCosts: totalCosts);
   }
 
   Future<ShoppingCartData> clearShoppingCart() async {
@@ -165,8 +168,8 @@ class DatabaseService {
   Future<int> addToQuantity(String id) async {
     final db = await database;
 
-    var result = await db.rawQuery(
-        'SELECT * FROM $_cartTableName WHERE $_cartItemId = ?', [id]);
+    var result = await db
+        .rawQuery('SELECT * FROM $_cartTableName WHERE $_cartItemId = ?', [id]);
 
     await db.update(
       _cartTableName,
@@ -184,8 +187,8 @@ class DatabaseService {
   Future<int> removeFromQuantity(String id) async {
     final db = await database;
 
-    var result = await db.rawQuery(
-        'SELECT * FROM $_cartTableName WHERE $_cartItemId = ?', [id]);
+    var result = await db
+        .rawQuery('SELECT * FROM $_cartTableName WHERE $_cartItemId = ?', [id]);
 
     await db.update(
       _cartTableName,
@@ -206,11 +209,12 @@ class DatabaseService {
     await db.delete(_cartTableName, where: '$id = $_cartItemId');
   }
 
-  Future<int> addPaymentMethod(String alias, String number) async {
+  Future<List<PaymentMethod>?> addPaymentMethod(String alias, String number) async {
     final db = await database;
     String? paymentOrigin;
 
-    if (number.startsWith('2') || number.startsWith('5')) paymentOrigin = masterCardImage;
+    if (number.startsWith('2') || number.startsWith('5'))
+      paymentOrigin = masterCardImage;
 
     if (number.startsWith('4')) paymentOrigin = visaImage;
 
@@ -220,12 +224,58 @@ class DatabaseService {
       await db.insert(_paymentMethodTableName, {
         _paymentMethodAlias: alias,
         _paymentMethodNumber: number,
-        _paymentMethodImage: paymentOrigin ?? baseImageURL
+        _paymentMethodImage: paymentOrigin ?? baseImageURL,
+        _paymentMethodCurrent: 0,
       });
-
     } catch (err) {
-      return 1;
+      return null;
     }
-    return 0;
+
+    List<PaymentMethod> updatedList = await getAllPaymentMethods();
+
+    return updatedList;
+  }
+
+  Future<List<PaymentMethod>> getAllPaymentMethods() async {
+    final db = await database;
+    final map = await db.rawQuery('SELECT * FROM $_paymentMethodTableName');
+
+
+    List<PaymentMethod> cards =
+        map.map((item) => PaymentMethod.fromJson(item)).toList();
+
+    return cards;
+  }
+
+  Future<void> removePaymentMethod(String id) async {
+    final db = await database;
+
+    await db.delete(_paymentMethodTableName, where: '$id = $_paymentMethodId');
+  }
+
+  Future<void> updatePaymentMethodStatus(String id) async {
+    final db = await database;
+    await db.update(_paymentMethodTableName, {_paymentMethodCurrent: 0});
+
+    await db.update(
+      _paymentMethodTableName,
+      {_paymentMethodCurrent: 1},
+      where: '$_paymentMethodId = ?',
+      whereArgs: [id],
+    );
+  }
+
+  Future<List<PaymentMethod>?> deletePaymentMethod(String id) async {
+    final db = await database;
+
+    try {
+      await db.delete(_paymentMethodTableName, where: '$id = $_paymentMethodId');
+    } catch (err) {
+      return null;
+    }
+
+    List<PaymentMethod> updatedList = await getAllPaymentMethods();
+
+    return updatedList;
   }
 }
