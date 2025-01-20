@@ -59,51 +59,51 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        AspectRatio(
-          aspectRatio: 3 / 1,
-          child: Container(
-            width: 50,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(25),
-              image: const DecorationImage(
-                  image: AssetImage(
-                      'assets/sample-furniture-images/work_chair.jpg'),
-                  fit: BoxFit.cover),
+    return Padding(
+      padding: const EdgeInsets.all(48.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          AspectRatio(
+            aspectRatio: 1 / 1,
+            child: Container(
+              width: 50,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25),
+                image: const DecorationImage(
+                    image: AssetImage(
+                        'assets/template-images/isotipo.png'),
+                    fit: BoxFit.cover),
+              ),
             ),
           ),
-        ),
-        const SizedBox(
-          height: 25,
-        ),
-        const Text('Iniciar Sesión'),
-        const SizedBox(
-          height: 25,
-        ),
-        FormInput(
-            title: 'Correo Electrónico',
-            hintText: 'mail@mail.com',
-            controller: _emailController),
-        const SizedBox(
-          height: 25,
-        ),
-        FormInput(
-            title: 'Contraseña',
-            hintText: '******',
-            controller: _passwordController),
-        const SizedBox(
-          height: 25,
-        ),
-        isLoading
-            ? CircularProgressIndicator()
-            : MaterialButton(
-                onPressed: handleLogin,
-                child: Text('Iniciar Sesión'),
-                color: Colors.yellow,
-              ),
-      ],
+          const Text('Iniciar Sesión'),
+          const SizedBox(
+            height: 25,
+          ),
+          FormInput(
+              title: 'Correo Electrónico',
+              hintText: 'mail@mail.com',
+              controller: _emailController),
+          const SizedBox(
+            height: 25,
+          ),
+          FormInput(
+              title: 'Contraseña',
+              hintText: '******',
+              controller: _passwordController),
+          const SizedBox(
+            height: 25,
+          ),
+          isLoading
+              ? CircularProgressIndicator()
+              : MaterialButton(
+                  onPressed: handleLogin,
+                  child: Text('Iniciar Sesión', style: TextStyle(color: Colors.white),),
+            color: Color.fromRGBO(83, 24, 125, 1.0),
+                ),
+        ],
+      ),
     );
   }
 }

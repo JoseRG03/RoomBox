@@ -46,7 +46,7 @@ class SelectedPaymentMethodCard extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      Text('Termina en ${(paymentMethod?.number.toString() ?? "    ").substring((paymentMethod?.number.toString() ?? "    ").length - 4)}'),
+                      Text('Termina en ${(paymentMethod?.number.toString() ?? "    ").length > 4 ? (paymentMethod?.number.toString() ?? "    ").substring((paymentMethod?.number.toString() ?? "    ").length - 4) : ''}'),
                       SizedBox(width: 10),
                       Container(
                         height: 25,

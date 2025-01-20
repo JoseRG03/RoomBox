@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import '../user/vouchers/voucher-details.dart';
 
 class PaymentComplete extends StatelessWidget {
-  const PaymentComplete({super.key});
+  const PaymentComplete({super.key, required this.voucherID});
+
+  final String voucherID;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,7 @@ class PaymentComplete extends StatelessWidget {
                     onPressed: () {
                       Navigator.of(context).pop();
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const ViewVoucher(voucherID: '14')));
+                          builder: (context) => ViewVoucher(voucherID: voucherID)));
                     }),
                 MaterialButton(
                     child: const Text('Volver'),

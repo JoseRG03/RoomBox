@@ -7,13 +7,14 @@ class CartItemCard extends StatefulWidget {
     required this.title,
     required this.cost,
     required this.units,
-    required this.imageUrl, required this.itemId,
+    required this.imageUrl, required this.itemId, required this.isEditable,
   });
   final String? itemId;
   final String title;
   final double cost;
   final int units;
   final String imageUrl;
+  final bool isEditable;
 
   @override
   State<CartItemCard> createState() => _CartItemCardState();
@@ -75,7 +76,7 @@ class _CartItemCardState extends State<CartItemCard> {
         children: [
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: widget.isEditable ? EdgeInsets.all(8.0) : EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -90,8 +91,8 @@ class _CartItemCardState extends State<CartItemCard> {
                   Row(
                     children: [
                       Text('${quantity} unidad${quantity > 1 ? 'es' : ''}'),
-                      IconButton(onPressed: addToQuantity, icon: Icon(Icons.add), iconSize: 15,),
-                      quantity > 1 ? IconButton(onPressed: removeFromQuantity, icon: Icon(Icons.remove), iconSize: 15,) : Container(),
+                      widget.isEditable ? IconButton(onPressed: addToQuantity, icon: Icon(Icons.add), iconSize: 15,) : Container(),
+                      widget.isEditable && quantity > 1 ? IconButton(onPressed: removeFromQuantity, icon: Icon(Icons.remove), iconSize: 15,) : Container(),
                     ],
                   ),
                 ],

@@ -85,7 +85,7 @@ class AddPayment extends StatelessWidget {
                 Align(
                     alignment: Alignment.centerRight,
                     child: MaterialButton(
-                      color: Colors.yellow,
+                      color: Color.fromRGBO(83, 24, 125, 1.0),
                       onPressed: () async {
 
                         List<PaymentMethod>? paymentMethods = await validateAndSubmit();
@@ -96,7 +96,7 @@ class AddPayment extends StatelessWidget {
 
                         Navigator.of(context).pop(paymentMethods);
                       },
-                      child: Text('Registrar'),
+                      child: Text('Registrar', style: TextStyle(color: Colors.white),),
                     ))
               ],
             ),

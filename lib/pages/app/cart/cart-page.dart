@@ -57,8 +57,8 @@ class _CartPageState extends State<CartPage> {
                       children: [
                         Text('Comprate algo'),
                         MaterialButton(
-                            child: Text("Ir a tienda"),
-                            color: Colors.yellow,
+                            child: Text("Ir a tienda", style: TextStyle(color: Colors.white),),
+                            color: Color.fromRGBO(83, 24, 125, 1.0),
                             onPressed: () {
                               print('Change Screen');
                             })
@@ -76,7 +76,7 @@ class _CartPageState extends State<CartPage> {
                               fontSize: 30, fontWeight: FontWeight.bold)),
                     ),
                     MaterialButton(
-                      child: Text('Vaciar Carrito'),
+                      child: Text('Vaciar Carrito', style: TextStyle(color: Colors.white),),
                       onPressed: () async {
                         ShoppingCartData newData = await db.clearShoppingCart();
                         setState(() {
@@ -84,7 +84,7 @@ class _CartPageState extends State<CartPage> {
                           cartCosts = newData.totalCosts;
                         });
                       },
-                      color: Colors.yellow,
+                      color: Color.fromRGBO(83, 24, 125, 1.0),
                     )
                   ],
                 ),
@@ -140,7 +140,9 @@ class _CartPageState extends State<CartPage> {
                     ),
                     Align(
                       alignment: Alignment.centerRight,
-                      child: MaterialButton(
+                      child: isSending
+                          ? CircularProgressIndicator()
+                          : MaterialButton(
                         onPressed: () async {
                           OrdersService ordersService = OrdersService();
                           setState(() {
@@ -153,12 +155,8 @@ class _CartPageState extends State<CartPage> {
                                 cartCosts.taxes,
                                 cartCosts.total);
 
-                            if (response == 1) {
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                  content: Text(
-                                      'Ha ocurrido un error. Favor intente más tarde')));
-                              return;
-                            }
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => PaymentComplete(voucherID: (response ?? 0).toString())));
                             db.clearShoppingCart();
                             setState(() {
                               itemList = [];
@@ -169,26 +167,12 @@ class _CartPageState extends State<CartPage> {
                                     'Ha ocurrido un error. Favor intente más tarde')));
                           }
 
-
-                          bool val = await Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const PaymentComplete()));
-
-                          print('Calling current payment method... $val');
-
-                          PaymentMethod currentPaymentMethod =
-                              await db.getCurrentPaymentMethod();
-
                           setState(() {
-                            print(
-                                'Current Payment Method: ${currentPaymentMethod.alias}');
                             isSending = false;
-                            selectedPaymentMethod = currentPaymentMethod;
                           });
                         },
-                        color: Colors.yellow,
-                        child: isSending
-                            ? CircularProgressIndicator()
-                            : Text('Realizar Pago'),
+                        color: Color.fromRGBO(83, 24, 125, 1.0),
+                        child: Text('Realizar Pago', style: TextStyle(color: Colors.white),),
                       ),
                     ),
                   ]),
@@ -216,6 +200,7 @@ class ItemList extends StatelessWidget {
           ShoppingCartItem currentItem = items[index];
 
           return CartItemCard(
+              isEditable: true,
               itemId: currentItem.shoppingCartItemId.toString(),
               title: currentItem.shoppingCartItemName,
               cost: currentItem.shoppingCartUnitPrice,

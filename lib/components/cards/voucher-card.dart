@@ -1,14 +1,24 @@
 import 'package:flutter/material.dart';
 
+import '../../const.dart';
 import '../../pages/app/user/payments/user-payment.dart';
 import '../../pages/app/user/vouchers/voucher-details.dart';
 
 class VoucherCard extends StatelessWidget {
   const VoucherCard({
-    super.key, required this.voucherID,
+    super.key, required this.voucherID, required this.date, required this.alias, required this.paymentDetails,
   });
 
   final String voucherID;
+  final String date;
+  final String alias;
+  final String paymentDetails;
+
+  String getPaymentMethodDetails () {
+    return 'Termina en ${paymentDetails.substring(paymentDetails.length - 4)}';
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -37,25 +47,25 @@ class VoucherCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '25 Dic 2024',
+                    date,
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    'Personal',
+                    alias,
                     style: TextStyle(fontSize: 16),
                   ),
                   Row(
                     children: [
-                      Text('Personal (Termina en 1335)'),
+                      Text(getPaymentMethodDetails()),
                       SizedBox(width: 10),
                       Container(
                         height: 25,
                         width: 25,
                         decoration: BoxDecoration(
-                          image: const DecorationImage(
+                          image: DecorationImage(
                               image: AssetImage(
-                                  'assets/template-images/master-card-logo.jpg'),
-                              fit: BoxFit.cover),
+                                  getPaymentMethodImage(paymentDetails)),
+                              fit: BoxFit.fitWidth),
                         ),
                       ),
                     ],

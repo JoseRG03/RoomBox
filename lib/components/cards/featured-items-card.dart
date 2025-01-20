@@ -61,10 +61,10 @@ class FeaturedItemCard extends StatelessWidget {
                   child: Container(
                     child: Padding(
                       padding: const EdgeInsets.all(4.0),
-                      child: Text('\$${cost} DOP'),
+                      child: Text('\$${cost} DOP', style: TextStyle(color: Colors.white),),
                     ),
                     decoration: BoxDecoration(
-                        color: Colors.yellow,
+                        color: Color.fromRGBO(83, 24, 125, 1.0),
                         borderRadius: BorderRadius.circular(5)),
                   ),
                   top: 20,
@@ -103,7 +103,7 @@ class FeaturedItemCard extends StatelessWidget {
                           },
                           child: Text('Ver Detalles')),
                       MaterialButton(
-                          color: Colors.yellow,
+                          color: Color.fromRGBO(83, 24, 125, 1.0),
                           onPressed: () async {
                             DatabaseService db = DatabaseService.instance;
                             await db.addToShoppingCart(
@@ -116,7 +116,7 @@ class FeaturedItemCard extends StatelessWidget {
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(addToCartSnackBar);
                           },
-                          child: Text('Agregar al Carrito')),
+                          child: Text('Agregar al Carrito', style: TextStyle(color: Colors.white),)),
                     ],
                   )
                 ],

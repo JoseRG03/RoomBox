@@ -1,18 +1,67 @@
 import 'package:flutter/material.dart';
+import 'package:room_box_app/api/vouchers-service.dart';
+import 'package:room_box_app/const.dart';
+import 'package:room_box_app/models/responses/voucher-article.dart';
+import 'package:room_box_app/models/responses/voucher-response.dart';
+import 'package:room_box_app/models/storage/payment-method.dart';
 
 import '../../../../components/cards/cart-item-card.dart';
 import '../../../../components/cards/payment-method-card.dart';
 
-class ViewVoucher extends StatelessWidget {
+class ViewVoucher extends StatefulWidget {
   const ViewVoucher({super.key, required this.voucherID});
 
   final String voucherID;
 
   @override
+  State<ViewVoucher> createState() => _ViewVoucherState();
+}
+
+class _ViewVoucherState extends State<ViewVoucher> {
+  VoucherResponse currentVoucher = VoucherResponse(
+      voucherId: 1,
+      voucherDate: DateTime.now(),
+      voucherDateDisplay: '',
+      paymentMethod: '0',
+      paymentDetails: '',
+      clientName: '',
+      subtotal: '',
+      taxAmount: '',
+      totalAmount: '',
+      voucherStatus: '',
+      articles: []);
+  List<VoucherArticle> articlesList = [];
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    getInitialData();
+  }
+
+  void getInitialData() async {
+    setState(() {
+      isLoading = true;
+    });
+    VouchersService vouchersService = VouchersService();
+
+    VoucherResponse? data = await vouchersService.getVoucher(widget.voucherID);
+
+    setState(() {
+      if (data != null) currentVoucher = data;
+      articlesList = data?.articles ?? [];
+      isLoading = false;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Detalles de voucher: ${voucherID}'),
+        title: isLoading
+            ? Center(child: CircularProgressIndicator())
+            : Text('Detalles: ${currentVoucher.voucherDateDisplay}'),
       ),
       body: Container(
         margin: EdgeInsets.all(10),
@@ -23,13 +72,28 @@ class ViewVoucher extends StatelessWidget {
               Text('Artículos Comprados',
                   style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
               SizedBox(height: 20),
-              Expanded(
-                child: ListView(
-                  children: [
-                    CartItemCard(itemId: "1", units: 10, cost: 9.99, title: 'Uberflaksen', imageUrl: 'assets/template-images/base-image.jpg'),
-                  ],
-                ),
-              ),
+              isLoading
+                  ? Expanded(child: Center(child: CircularProgressIndicator()))
+                  : Expanded(
+                      child: ListView.builder(
+                          itemCount: articlesList.length ?? 0,
+                          itemBuilder: (context, index) {
+                            if (currentVoucher?.articles == null ||
+                                index >= currentVoucher!.articles.length) {
+                              return SizedBox.shrink();
+                            }
+
+                            VoucherArticle? article = articlesList[index];
+                            return CartItemCard(
+                                isEditable: false,
+                                title: article.articleName ?? "",
+                                cost: double.parse(
+                                    article.articleUnitPrice ?? '0.00'),
+                                units: article.articleQuantity ?? 0,
+                                imageUrl: baseImageURL,
+                                itemId: '0');
+                          }),
+                    ),
               Container(
                 margin: EdgeInsets.only(top: 15),
                 child: Column(children: [
@@ -39,7 +103,7 @@ class ViewVoucher extends StatelessWidget {
                       Text('Subtotal:',
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold)),
-                      Text('\$149.94',
+                      Text('\$${currentVoucher?.subtotal ?? ""} DOP',
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold)),
                     ],
@@ -50,7 +114,7 @@ class ViewVoucher extends StatelessWidget {
                       Text('Impuestos:',
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold)),
-                      Text('\$26.98',
+                      Text('\$${currentVoucher?.taxAmount ?? ""} DOP',
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold)),
                     ],
@@ -61,7 +125,7 @@ class ViewVoucher extends StatelessWidget {
                       Text('Total:',
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold)),
-                      Text('\$176.92',
+                      Text('\$${currentVoucher?.totalAmount ?? ""} DOP',
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold)),
                     ],
@@ -74,7 +138,16 @@ class ViewVoucher extends StatelessWidget {
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 14),
                       )),
-                  SelectedPaymentMethodCard(isEditable: false,),
+                  SelectedPaymentMethodCard(
+                    isEditable: false,
+                    paymentMethod: PaymentMethod(
+                        isCurrent: 0,
+                        id: '1',
+                        alias: currentVoucher.paymentDetails ?? "",
+                        number: int.parse(currentVoucher.paymentMethod ?? '0'),
+                        image: getPaymentMethodImage(
+                            currentVoucher.paymentMethod ?? '')),
+                  ),
                 ]),
               )
             ],

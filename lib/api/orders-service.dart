@@ -2,6 +2,7 @@ import 'package:room_box_app/api/database-service.dart';
 import 'package:room_box_app/models/requests/order-articles-form.dart';
 import 'package:room_box_app/models/requests/order-placement-form.dart';
 import 'package:room_box_app/models/requests/voucher-creation-form.dart';
+import 'package:room_box_app/models/responses/voucher-response.dart';
 import 'package:room_box_app/models/storage/payment-method.dart';
 import 'package:room_box_app/models/storage/shopping-cart-data.dart';
 
@@ -56,9 +57,9 @@ class OrdersService {
           clientId: "1",
           orderId: orderData.orderId.toString());
 
-      final voucherResponse = await voucherNetworking.postData(voucherRequest.toJson(), headers);
+      VoucherResponse voucherResponse = await voucherNetworking.postData(voucherRequest.toJson(), headers);
 
-      return 0;
+      return voucherResponse.voucherId;
     } catch (err) {
       return 1;
     }

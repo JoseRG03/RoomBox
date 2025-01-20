@@ -196,7 +196,7 @@ class TopItemsCarousel extends StatelessWidget {
             title: items[itemIndex].articleName,
             cost: items[itemIndex].articleUnitPrice,
             image: items[itemIndex].image ?? baseImageURL,
-            description: items[itemIndex].description ?? 'Incredible Item!',
+            description: items[itemIndex].articleDescription ?? 'Incredible Item!',
           );
         }
 

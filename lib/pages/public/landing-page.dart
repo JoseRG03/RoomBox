@@ -16,12 +16,12 @@ class LandingPage extends StatelessWidget {
         AspectRatio(
           aspectRatio: 1 / 1,
           child: Container(
-            width: 50,
+            width: 100,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(25),
               image: const DecorationImage(
                   image: AssetImage(
-                      'assets/sample-furniture-images/work_chair.jpg'),
+                      'assets/template-images/imagotipo.png'),
                   fit: BoxFit.cover),
             ),
           ),
@@ -33,10 +33,10 @@ class LandingPage extends StatelessWidget {
           onPressed: () {
             changeScreen(1);
           },
-          color: Colors.yellow,
+          color: Color.fromRGBO(83, 24, 125, 1.0),
           child: const Text(
             'Iniciar Sesión',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -46,10 +46,10 @@ class LandingPage extends StatelessWidget {
           onPressed: () {
             changeScreen(2);
           },
-          color: Colors.yellow,
+          color: Color.fromRGBO(83, 24, 125, 1.0),
           child: const Text(
             'Crear Cuenta',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
           ),
         ),
       ],
