@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:room_box_app/api/database-service.dart';
+import 'package:room_box_app/api/orders-service.dart';
 import 'package:room_box_app/models/storage/shopping-cart-data.dart';
 import 'package:room_box_app/models/storage/shopping_cart_item.dart';
 import 'package:room_box_app/pages/app/cart/payment-complete.dart';
@@ -19,6 +20,7 @@ class _CartPageState extends State<CartPage> {
   List<ShoppingCartItem> itemList = [];
   TotalCosts cartCosts = TotalCosts();
   bool isLoading = false;
+  bool isSending = false;
   DatabaseService db = DatabaseService.instance;
 
   @override
@@ -133,12 +135,33 @@ class _CartPageState extends State<CartPage> {
                     Align(
                       alignment: Alignment.centerRight,
                       child: MaterialButton(
-                        onPressed: () {
+                        onPressed: () async {
+                          OrdersService ordersService = OrdersService();
+                          setState(() {
+                            isSending = true;
+                          });
+                          try {
+                            final response = await ordersService.placeOrder();
+                            db.clearShoppingCart();
+                            setState(() {
+                              itemList = [];
+                            });
+                          } catch (err) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text(
+                                    'Ha ocurrido un error. Favor intente más tarde')));
+                          }
+
+                          setState(() {
+                            isSending = false;
+                          });
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => const PaymentComplete()));
                         },
                         color: Colors.yellow,
-                        child: Text('Realizar Pago'),
+                        child: isSending
+                            ? CircularProgressIndicator()
+                            : Text('Realizar Pago'),
                       ),
                     ),
                   ]),

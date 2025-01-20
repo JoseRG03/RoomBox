@@ -7,7 +7,6 @@ import '../models/error.dart';
 class Networking {
   final String urlSection;
 
-
   Networking({required this.urlSection});
 
   // Await the http get response, then decode the json-formatted response.
@@ -35,7 +34,8 @@ class Networking {
 
     var response =
         await http.post(Uri.parse(url), body: body, headers: headers);
-    if (response.statusCode == 200) {
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
       var jsonResponse = jsonDecode(response.body) as Map<String, dynamic>;
       return jsonResponse;
     } else {

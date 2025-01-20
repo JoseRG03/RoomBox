@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../api/database-service.dart';
 import '../../pages/app/store/item-description.dart';
 import '../snack-bar.dart';
 
@@ -103,7 +104,15 @@ class FeaturedItemCard extends StatelessWidget {
                           child: Text('Ver Detalles')),
                       MaterialButton(
                           color: Colors.yellow,
-                          onPressed: () {
+                          onPressed: () async {
+                            DatabaseService db = DatabaseService.instance;
+                            await db.addToShoppingCart(
+                                itemID ?? '',
+                                title ?? '',
+                                double.tryParse(cost ?? '') ?? 0,
+                                image ??
+                                    'assets/template-images-images/base-image.jpg');
+
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(addToCartSnackBar);
                           },

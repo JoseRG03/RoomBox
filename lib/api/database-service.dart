@@ -1,4 +1,5 @@
 import 'package:path/path.dart';
+import 'package:room_box_app/const.dart';
 import 'package:room_box_app/models/storage/shopping-cart-data.dart';
 import 'package:room_box_app/models/storage/shopping_cart_item.dart';
 import 'package:room_box_app/models/storage/user-data.dart';
@@ -21,6 +22,12 @@ class DatabaseService {
   final String _cartItemUnitPrice = 'shopping_cart_unit_price';
   final String _cartItemAmount = 'shopping_cart_item_amount';
   final String _cartItemImageUrl = 'shopping_cart_item_image';
+
+  final String _paymentMethodTableName = 'payment_method';
+  final String _paymentMethodId = 'payment_method_id';
+  final String _paymentMethodAlias = 'payment_method_alias';
+  final String _paymentMethodNumber = 'payment_method_number';
+  final String _paymentMethodImage = 'payment_method_image';
 
   DatabaseService._constructor();
 
@@ -53,6 +60,15 @@ class DatabaseService {
          $_cartItemImageUrl TEXT NOT NULL
        )
       ''');
+        db.execute('''
+       CREATE TABLE $_paymentMethodTableName (
+         $_paymentMethodId INTEGER PRIMARY KEY AUTOINCREMENT,
+         $_paymentMethodAlias TEXT NOT NULL,
+         $_paymentMethodNumber INTEGER NOT NULL,
+         $_paymentMethodImage TEXT NOT NULL,
+       )
+      ''');
+
       },
     );
 
@@ -190,4 +206,26 @@ class DatabaseService {
     await db.delete(_cartTableName, where: '$id = $_cartItemId');
   }
 
+  Future<int> addPaymentMethod(String alias, String number) async {
+    final db = await database;
+    String? paymentOrigin;
+
+    if (number.startsWith('2') || number.startsWith('5')) paymentOrigin = masterCardImage;
+
+    if (number.startsWith('4')) paymentOrigin = visaImage;
+
+    if (number.startsWith('3')) paymentOrigin = amexImage;
+
+    try {
+      await db.insert(_paymentMethodTableName, {
+        _paymentMethodAlias: alias,
+        _paymentMethodNumber: number,
+        _paymentMethodImage: paymentOrigin ?? baseImageURL
+      });
+
+    } catch (err) {
+      return 1;
+    }
+    return 0;
+  }
 }
